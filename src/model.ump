@@ -1,0 +1,38 @@
+class Customer
+{
+   name;
+   email;
+   phoneNumber;
+  1 -- 1..* Order;
+}
+
+class Address
+{
+  streetAddress;
+  int aptNumber;
+  postalCode;
+  city;
+  1 -- 1..* Customer;
+}
+
+class Pizza
+{
+    int calorieCount;
+  double basePrice;
+}
+
+class Ingredient
+{
+  name;
+  double price;
+  int calorieCount;
+1..* -- 1..* Pizza;
+}
+
+class Order
+{
+  date;
+double totalPrice;
+int orderNumber;
+1..* -- 1..* Pizza;
+}
