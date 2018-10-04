@@ -1,3 +1,5 @@
+import java.awt.event.ActionEvent;
+
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,6 +57,13 @@ public class MainPage extends JFrame{
 		updatePizzaButton = new JButton();
 		updatePizzaButton.setText("Update Pizza");
 		
+		addPizzaButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt) 
+			{
+				addPizzaButtonActionPerformed(evt);
+			}
+		});
+		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		
@@ -81,6 +90,12 @@ public class MainPage extends JFrame{
 						.addComponent(updatePizzaButton)
 						));
 		
+	}
+	
+	public void addPizzaButtonActionPerformed(ActionEvent evt)
+	{
+		new AddPizzaPage().setVisible(true);
+		dispose();
 	}
 
 }
