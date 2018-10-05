@@ -101,6 +101,14 @@ public class AddPizzaPage extends JFrame{
 			}
 		});
 		
+		removeIngredientButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt) 
+			{
+				removeIngredientButtonActionPerformed(evt);
+			}
+		});
+		
+		
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -211,6 +219,11 @@ public class AddPizzaPage extends JFrame{
 			error = "The calorie amount must be a number.";
 			return false;
 		}
+		else if(model.isEmpty())
+		{
+			error = "The pizza must have ingredients.";
+			return false;
+		}
 		else
 		{
 			return true;
@@ -257,6 +270,21 @@ public class AddPizzaPage extends JFrame{
 		else
 		{
 			error = "You must enter an ingredient name to add it to the list.";
+			refresh();
+		}
+	}
+	
+	public void removeIngredientButtonActionPerformed(ActionEvent evt)
+	{
+		if(ingredientList.getSelectedIndex() == -1)
+		{
+			error = "No ingredient has been selected to be removed.";
+			refresh();
+		}
+		else
+		{
+			error = null;
+			model.removeElementAt(ingredientList.getSelectedIndex() );
 			refresh();
 		}
 	}
