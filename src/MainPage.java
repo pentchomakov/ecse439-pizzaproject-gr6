@@ -37,7 +37,7 @@ public class MainPage extends JFrame{
 	public void InitializeComponents()
 	{
 		int frameWidth = 1000;
-		int frameHeight = 700;
+		int frameHeight = 350;
 		
 		setTitle("Mamma Mia Restaurant Ordering System");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,6 +90,7 @@ public class MainPage extends JFrame{
 						.addComponent(updatePizzaButton)
 						));
 		
+		pack();		
 	}
 	
 	public void addPizzaButtonActionPerformed(ActionEvent evt)
