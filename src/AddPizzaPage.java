@@ -2,14 +2,17 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormatSymbols;
 
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 public class AddPizzaPage extends JFrame{
 	
@@ -19,8 +22,10 @@ public class AddPizzaPage extends JFrame{
 	
 	private JButton addPizzaButton;
 	private JButton addIngredientButton;
+	private JButton removeIngredientButton;
 	
-	private JTable ingredientList;
+	DefaultListModel<String> model = new DefaultListModel<>();
+	private JList<String> ingredientList;
 	
 	private JTextField nameField;
 	private JTextField ingredientField;
@@ -58,13 +63,17 @@ public class AddPizzaPage extends JFrame{
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
 		
-		ingredientList = new JTable();
+		ingredientList = new JList<>( model );
+		
 		
 		addPizzaButton = new JButton();
 		addPizzaButton.setText("Add Pizza");
 		
 		addIngredientButton = new JButton();
 		addIngredientButton.setText("Add Ingredient");
+		
+		removeIngredientButton = new JButton();
+		removeIngredientButton.setText("Remove Ingredient");
 		
 		nameField = new JTextField();
 		ingredientField = new JTextField();
@@ -106,19 +115,25 @@ public class AddPizzaPage extends JFrame{
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(nameLabel)
 						.addComponent(ingredientLabel)
-						.addComponent(calorieLabel)
-						.addComponent(addIngredientButton))
+						.addComponent(calorieLabel))
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(nameField)
 						.addComponent(ingredientField)
 						.addComponent(calorieField)
-						.addComponent(addPizzaButton))
+						)
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(addPizzaButton)
+						.addComponent(addIngredientButton)
+						.addComponent(removeIngredientButton))
 				);
 		
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {nameField, nameLabel});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {ingredientField, ingredientLabel});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {calorieField, calorieLabel});
-		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addPizzaButton, addIngredientButton});
+		
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addPizzaButton, nameLabel});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addIngredientButton, ingredientLabel});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {removeIngredientButton, calorieLabel});
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
@@ -127,13 +142,15 @@ public class AddPizzaPage extends JFrame{
 				.addGroup(layout.createParallelGroup()
 						.addComponent(nameLabel)
 						.addComponent(ingredientLabel)
-						.addComponent(calorieLabel)
-						.addComponent(addIngredientButton))
+						.addComponent(calorieLabel))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(nameField)
 						.addComponent(ingredientField)
-						.addComponent(calorieField)
-						.addComponent(addPizzaButton))
+						.addComponent(calorieField))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(addPizzaButton)
+						.addComponent(addIngredientButton)
+						.addComponent(removeIngredientButton))
 				);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {nameField, addPizzaButton});
@@ -148,6 +165,7 @@ public class AddPizzaPage extends JFrame{
 	public void refresh() 
 	{
 		errorMessage.setText(error);
+		ingredientField.setText("");
 		pack();
 	}
 	
@@ -229,6 +247,17 @@ public class AddPizzaPage extends JFrame{
 	
 	public void addIngredientButtonActionPerformed(ActionEvent evt)
 	{
-		
+		String ingredientName = ingredientField.getText();
+		if(addIngredientFieldsFilledCorrectly(ingredientName) == true)
+		{
+			error = null;
+			model.addElement(ingredientName);
+			refresh();
+		}
+		else
+		{
+			error = "You must enter an ingredient name to add it to the list.";
+			refresh();
+		}
 	}
 }
