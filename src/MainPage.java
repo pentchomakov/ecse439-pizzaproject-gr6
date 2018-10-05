@@ -64,6 +64,20 @@ public class MainPage extends JFrame{
 			}
 		});
 		
+		deletePizzaButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt) 
+			{
+				removePizzaButtonActionPerformed(evt);
+			}
+		});
+		
+		updatePizzaButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt) 
+			{
+				updatePizzaButtonActionPerformed(evt);
+			}
+		});
+		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		
@@ -97,6 +111,16 @@ public class MainPage extends JFrame{
 	{
 		new AddPizzaPage().setVisible(true);
 		dispose();
+	}
+	
+	public void removePizzaButtonActionPerformed(ActionEvent evt)
+	{
+		
+	}
+	
+	public void updatePizzaButtonActionPerformed(ActionEvent evt)
+	{
+		
 	}
 
 }
