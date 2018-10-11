@@ -138,11 +138,11 @@ public class MainPage extends JFrame{
 
 	public void initDefaultMenu() {
 
-		DefaultTableModel model = new DefaultTableModel(new Object[]{"Pizza", "Calories", "Ingredients"}, pizzaMenuSize);
+		DefaultTableModel model = new DefaultTableModel(new Object[]{"Pizza", "Price", "Calories", "Ingredients"}, pizzaMenuSize);
 		pizzaTable = new JTable(model);
 
 		// Append a row for table headers
-		model.addRow(new Object[]{"Pizza Name:", "Calories:", "Ingredients:"});
+		model.addRow(new Object[]{"Pizza Name:", "Price", "Calories:", "Ingredients:"});
 
 		// Cheese
 		Ingredient cheese = new Ingredient("Cheese", 0.5, 25);
@@ -179,7 +179,7 @@ public class MainPage extends JFrame{
 		menu.add(vegetarianPizza);
 
 		for (Pizza pizza : menu) {
-			model.addRow(new Object[]{pizza.getName(), pizza.getCalorieCount(),pizza.listIngredients()});
+			model.addRow(new Object[]{pizza.getName(),"$"+pizza.getBasePrice(), pizza.getCalorieCount(),pizza.listIngredients()});
 		}
 
 	}
