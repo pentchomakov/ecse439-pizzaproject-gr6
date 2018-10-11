@@ -12,17 +12,22 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class MainPage extends JFrame{
+public class MainPage extends JFrame {
 	
 	private JPanel contentPane;
-	private int pizzaMenuSize = 3; // number of pre created types of pizza
+	// Preset Menu Pizzas
+	private int pizzaMenuSize = 3;
 	
 	private static MainPage frame;
 	private JTable pizzaTable;
+	DefaultTableModel menuModel;
 	private JTable orderTable;
+	DefaultTableModel orderModel;
 
 	// Array for holding the current pizza menu
-	private List<Pizza> menu = new ArrayList<>();
+	private List<Pizza> presetPizzaMenu = new ArrayList<>();
+	private List<Ingredient> ingredients = new ArrayList<>();
+	private List<Pizza> pizzaShoppingCart = new ArrayList<>();
 
 	private JLabel tableLabel;
 	private JLabel orderLabel;
@@ -33,6 +38,7 @@ public class MainPage extends JFrame{
 	private JButton updatePizzaButton;
 	
 	public static void main(String[] args) {
+	
 		try {
 			frame = new MainPage();
 			frame.setVisible(true);
@@ -41,13 +47,60 @@ public class MainPage extends JFrame{
 		}
 	}
 	
-	public MainPage()
-	{
+	public MainPage() {
+		// Menu and Ingredients Initialization (hardcoded persistence)
+		initMenuAndIngredients();
+		
+		// UI
 		InitializeComponents();
 	}
 	
-	public void InitializeComponents()
-	{
+	public void initMenuAndIngredients() {
+		// Available ingredients
+		// Cheese 
+		Ingredient cheese = new Ingredient("Cheese", 0.5, 25);
+		ingredients.add(cheese);
+
+		// Pizza Sauce
+		Ingredient sauce = new Ingredient("Pizza Sauce", 0.5, 15);
+		ingredients.add(sauce);
+
+		// Pepperoni
+		Ingredient pepperoni = new Ingredient("Pepperoni", 2.5, 55);
+		ingredients.add(pepperoni);
+
+		// Ham
+		Ingredient ham = new Ingredient("Ham", 3.5, 155);
+		ingredients.add(ham);
+
+		// Peppers
+		Ingredient peppers = new Ingredient("Peppers", 2, 5);
+		ingredients.add(peppers);
+
+		// Olives
+		Ingredient olives = new Ingredient("Olives", 3, 15);
+		ingredients.add(olives);
+
+		// Preset Pizza Menu
+		// Cheese Pizza
+		Pizza cheesePizza = new Pizza(Arrays.asList(cheese, sauce), "Cheese Pizza");
+		presetPizzaMenu.add(cheesePizza);
+
+		// Pepperoni Pizza
+		Pizza pepperoniPizza = new Pizza(Arrays.asList(cheese, sauce, pepperoni), "Pepperoni Pizza");
+		presetPizzaMenu.add(pepperoniPizza);
+
+		// Meat Lovers Pizza
+		Pizza meatPizza = new Pizza(Arrays.asList(cheese, sauce, pepperoni, ham), "Meat Lovers Pizza");
+		presetPizzaMenu.add(meatPizza);
+
+		// Vegetarian
+		Pizza vegetarianPizza = new Pizza(Arrays.asList(cheese, sauce, peppers, olives), "Vegetarian Pizza");
+		presetPizzaMenu.add(vegetarianPizza);
+
+	}
+	
+	public void InitializeComponents() {
 		int frameWidth = 2000;
 		int frameHeight = 350;
 		
@@ -57,14 +110,15 @@ public class MainPage extends JFrame{
 
 		// Sets up default pizza menu choices
 		initDefaultMenu();
-
-		orderTable = new JTable();
+		
+		// Set up order list
+		initTotalOrder();
 		
 		tableLabel = new JLabel();
-		tableLabel.setText("The currently available pizzas:");
+		tableLabel.setText("Mamma Mia's Menu - Select a pizza from the menu or make your own!");
 		
 		addPizzaButton = new JButton();
-		addPizzaButton.setText("Select Pizza");
+		addPizzaButton.setText("Add Pizza");
 		
 		deletePizzaButton = new JButton();
 		deletePizzaButton.setText("Delete Pizza");
@@ -75,30 +129,26 @@ public class MainPage extends JFrame{
 		createYourOwnButton = new JButton();
 		createYourOwnButton.setText("Create Your own");
 		
-		addPizzaButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) 
-			{
+		addPizzaButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addPizzaButtonActionPerformed(evt);
 			}
 		});
 		
-		deletePizzaButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) 
-			{
+		deletePizzaButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				removePizzaButtonActionPerformed(evt);
 			}
 		});
 
-		createYourOwnButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt)
-			{
+		createYourOwnButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				createPizzaButtonActionPerformed(evt);
 			}
 		});
 		
-		updatePizzaButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) 
-			{
+		updatePizzaButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				updatePizzaButtonActionPerformed(evt);
 			}
 		});
@@ -112,20 +162,21 @@ public class MainPage extends JFrame{
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
 				.addComponent(tableLabel)
-				.addComponent(pizzaTable, 100, 600, frameWidth)
+				.addComponent(pizzaTable, 100, 600, frameWidth/2)
+				.addComponent(orderTable, 100, 600, frameWidth)
 				.addGroup(layout.createSequentialGroup()
 								.addComponent(addPizzaButton, 100, 100, frameWidth/4)
 								.addComponent(deletePizzaButton, 100, 100, frameWidth/4)
 								.addComponent(updatePizzaButton, 100, 100, frameWidth/4)
-								.addComponent(createYourOwnButton, 100, 100, frameWidth/4)
-						)
-				.addComponent(tableLabel)
+								.addComponent(createYourOwnButton, 100, 100, frameWidth/4))
+				
 		);
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 				.addComponent(tableLabel)
 				.addComponent(pizzaTable, 100, 300, frameHeight)
+				.addComponent(orderTable, 100, 300, frameHeight)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(addPizzaButton)
 						.addComponent(deletePizzaButton)
@@ -138,73 +189,97 @@ public class MainPage extends JFrame{
 
 	public void initDefaultMenu() {
 
-		DefaultTableModel model = new DefaultTableModel(new Object[]{"Pizza", "Price", "Calories", "Ingredients"}, pizzaMenuSize);
-		pizzaTable = new JTable(model);
+		menuModel = new DefaultTableModel(new Object[]{"Pizza", "Price", "Calories", "Ingredients"}, pizzaMenuSize);
+		pizzaTable = new JTable(menuModel);
 
 		// Append a row for table headers
-		model.addRow(new Object[]{"Pizza Name:", "Price", "Calories:", "Ingredients:"});
+		menuModel.addRow(new Object[]{"Pizza Name:", "Price", "Calories:", "Ingredients:"});
 
-		// Cheese
-		Ingredient cheese = new Ingredient("Cheese", 0.5, 25);
-
-		// Pizza Sauce
-		Ingredient sauce = new Ingredient("Pizza Sauce", 0.5, 15);
-
-		// Pepperoni
-		Ingredient pepperoni = new Ingredient("Pepperoni", 2.5, 55);
-
-		// Ham
-		Ingredient ham = new Ingredient("Ham", 3.5, 155);
-
-		// Peppers
-		Ingredient peppers = new Ingredient("Peppers", 2, 5);
-
-		// Olives
-		Ingredient olives = new Ingredient("Olives", 3, 15);
-
-		// Cheese Pizza
-		Pizza cheesePizza = new Pizza(Arrays.asList(cheese, sauce), "Cheese Pizza");
-		menu.add(cheesePizza);
-
-		// Pepperoni Pizza
-		Pizza pepperoniPizza = new Pizza(Arrays.asList(cheese, sauce, pepperoni), "Pepperoni Pizza");
-		menu.add(pepperoniPizza);
-
-		// Meat Lovers Pizza
-		Pizza meatPizza = new Pizza(Arrays.asList(cheese, sauce, pepperoni, ham), "Meat Lovers Pizza");
-		menu.add(meatPizza);
-
-		// Vegetarian
-		Pizza vegetarianPizza = new Pizza(Arrays.asList(cheese, sauce, peppers, olives), "Vegetarian Pizza");
-		menu.add(vegetarianPizza);
-
-		for (Pizza pizza : menu) {
-			model.addRow(new Object[]{pizza.getName(),"$"+pizza.getBasePrice(), pizza.getCalorieCount(),pizza.listIngredients()});
+		for (Pizza pizza : presetPizzaMenu) {
+			menuModel.addRow(new Object[]{pizza.getName(),"$"+pizza.getBasePrice(), pizza.getCalorieCount(),pizza.listIngredients()});
 		}
 
 	}
-
-
 	
-	public void addPizzaButtonActionPerformed(ActionEvent evt)
-	{
-
+	public void initTotalOrder() {
+		orderModel = new DefaultTableModel(new Object[]{"Pizza", "Price", "Calories", "Ingredients"}, pizzaMenuSize);
+		orderTable = new JTable(orderModel);
+		orderModel.addRow(new Object[]{"Pizza Name:", "Price", "Calories:", "Ingredients:"});
+	}
+	
+	public void addPizzaButtonActionPerformed(ActionEvent evt) {
+		
+		// Get the selected pizza and add it to the the current "checkout basket"
+		int rowNumber = pizzaTable.getSelectedRow();
+		// If equals -1, no rows are selected. If equals to 0, it is the header row)
+		if (rowNumber != -1 || rowNumber != 0) {
+			String pizzaName = pizzaTable.getModel().getValueAt(rowNumber, 0).toString();
+			
+			for (Pizza pizza : presetPizzaMenu) {
+				if (pizza.getName().equals(pizzaName)) {
+					pizzaShoppingCart.add(pizza);
+					addPizzaToShoppingCart(pizza);
+					break;
+				}
+			}
+		}
+	}
+	
+	public void addPizzaToShoppingCart(Pizza pizza) {
+		orderModel.addRow(new Object[]{pizza.getName(),"$"+pizza.getBasePrice(), pizza.getCalorieCount(),pizza.listIngredients()});
+		orderModel.fireTableDataChanged();
 	}
 
-	public void createPizzaButtonActionPerformed(ActionEvent evt)
-	{
+	public void createPizzaButtonActionPerformed(ActionEvent evt) {
 		new AddPizzaPage().setVisible(true);
 	}
 	
-	public void removePizzaButtonActionPerformed(ActionEvent evt)
-	{
+	public void removePizzaButtonActionPerformed(ActionEvent evt) {
+		// Get selected pizza from Order Table
+		// Get the selected pizza and add it to the the current "checkout basket"
+		int rowNumber = orderTable.getSelectedRow();
 		
+		// If equals -1, no rows are selected. If equals to 0, it is the header row)
+		if (rowNumber != -1 || rowNumber != 0) {
+			String pizzaName = orderTable.getModel().getValueAt(rowNumber, 0).toString();
+			// TODO -> requires that we display pizzas in the Table as objects or to add an ID field which we don't show
+			// Delete the pizza from the Shopping Cart
+			
+			// Delete the pizza from the Order Table
+			orderModel.removeRow(rowNumber);
+			orderModel.fireTableDataChanged();
+			
+		}
 	}
 	
-	public void updatePizzaButtonActionPerformed(ActionEvent evt)
-	{
+	public void updatePizzaButtonActionPerformed(ActionEvent evt) {
+		// Get selected pizza from the Order Table
+		int rowNumber = orderTable.getSelectedRow();
 		
+		// TODO
+		// Pop up a new window to modify the pizza
+		
+		// TODO
+		// Modify the selected pizza object
+		
+		// TODO
+		// Update the Order Table
 	}
 
-
+	public void checkoutButtonActionPerformed(ActionEvent evt) {
+		// TODO
+		// Add button check under the 4 other buttons
+		
+		// TODO
+		// Checkout makes a new window with the Shopping Cart
+		
+		// TODO
+		// Total with taxes has to appear
+		
+		// TODO
+		// Customer has to input their personal information and address
+		
+		// TODO
+		// Then "checkout"
+	}
 }
