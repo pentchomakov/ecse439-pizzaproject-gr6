@@ -32,6 +32,18 @@ public class Pizza
     orders = new ArrayList<Order>();
   }
 
+  public Pizza(List<Ingredient> ingredients)
+  {
+
+    for (Ingredient ingredient : ingredients) {
+      calorieCount += ingredient.getCalorieCount();
+      basePrice += ingredient.getPrice();
+    }
+
+    this.ingredients = ingredients;
+    orders = new ArrayList<Order>();
+  }
+
   //------------------------
   // INTERFACE
   //------------------------
