@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -26,7 +28,10 @@ public class AddPizzaPage extends JFrame{
 	
 	DefaultListModel<String> model = new DefaultListModel<>();
 	private JList<String> ingredientList;
-	
+
+	// Array for holding the possible topping choices
+	private List<Ingredient> toppings = new ArrayList<>();
+
 	private JTextField nameField;
 	private JTextField ingredientField;
 	private JTextField calorieField;
@@ -62,10 +67,12 @@ public class AddPizzaPage extends JFrame{
 		
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
-		
+
+		// Sets up default topping choices
+		initDefaultToppings();
+
 		ingredientList = new JList<>( model );
-		
-		
+
 		addPizzaButton = new JButton();
 		addPizzaButton.setText("Add Pizza");
 		
@@ -287,5 +294,33 @@ public class AddPizzaPage extends JFrame{
 			model.removeElementAt(ingredientList.getSelectedIndex() );
 			refresh();
 		}
+	}
+
+	public void initDefaultToppings() {
+
+		// Cheese
+		Ingredient cheese = new Ingredient("Cheese", 0.5, 25);
+		toppings.add(cheese);
+
+		// Pizza Sauce
+		Ingredient sauce = new Ingredient("Pizza Sauce", 0.5, 15);
+		toppings.add(sauce);
+
+		// Pepperoni
+		Ingredient pepperoni = new Ingredient("Pepperoni", 2.5, 55);
+		toppings.add(pepperoni);
+
+		// Ham
+		Ingredient ham = new Ingredient("Ham", 3.5, 155);
+		toppings.add(ham);
+
+		// Peppers
+		Ingredient peppers = new Ingredient("Peppers", 2, 5);
+		toppings.add(peppers);
+
+		// Olives
+		Ingredient olives = new Ingredient("Olives", 3, 15);
+		toppings.add(olives);
+
 	}
 }

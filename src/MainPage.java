@@ -1,6 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -21,9 +23,6 @@ public class MainPage extends JFrame{
 
 	// Array for holding the current pizza menu
 	private List<Pizza> menu = new ArrayList<>();
-
-	// Array for holding the possible topping choices
-	private List<Ingredient> toppings = new ArrayList<>();
 
 	private JLabel tableLabel;
 	private JLabel orderLabel;
@@ -55,9 +54,6 @@ public class MainPage extends JFrame{
 		setTitle("Mamma Mia Restaurant Ordering System");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, frameWidth, frameHeight);
-
-		// Sets up default topping choices
-		initDefaultToppings();
 
 		// Sets up default pizza menu choices
 		initDefaultMenu();
@@ -142,44 +138,53 @@ public class MainPage extends JFrame{
 
 	public void initDefaultMenu() {
 
-		DefaultTableModel model = new DefaultTableModel(new Object[]{"Pizza", "Calories"}, pizzaMenuSize);
+		DefaultTableModel model = new DefaultTableModel(new Object[]{"Pizza", "Calories", "Ingredients"}, pizzaMenuSize);
 		pizzaTable = new JTable(model);
 
 		// Append a row for table headers
-		model.addRow(new Object[]{"Pizza Name:", "Calories:"});
-
-		// Cheese Pizza
-//		Pizza cheese = new Pizza();
-
-	}
-
-	public void initDefaultToppings() {
+		model.addRow(new Object[]{"Pizza Name:", "Calories:", "Ingredients:"});
 
 		// Cheese
 		Ingredient cheese = new Ingredient("Cheese", 0.5, 25);
-		toppings.add(cheese);
 
 		// Pizza Sauce
 		Ingredient sauce = new Ingredient("Pizza Sauce", 0.5, 15);
-		toppings.add(sauce);
 
 		// Pepperoni
 		Ingredient pepperoni = new Ingredient("Pepperoni", 2.5, 55);
-		toppings.add(pepperoni);
 
 		// Ham
 		Ingredient ham = new Ingredient("Ham", 3.5, 155);
-		toppings.add(ham);
 
 		// Peppers
 		Ingredient peppers = new Ingredient("Peppers", 2, 5);
-		toppings.add(peppers);
 
 		// Olives
 		Ingredient olives = new Ingredient("Olives", 3, 15);
-		toppings.add(olives);
+
+		// Cheese Pizza
+		Pizza cheesePizza = new Pizza(Arrays.asList(cheese, sauce), "Cheese Pizza");
+		menu.add(cheesePizza);
+
+		// Pepperoni Pizza
+		Pizza pepperoniPizza = new Pizza(Arrays.asList(cheese, sauce, pepperoni), "Pepperoni Pizza");
+		menu.add(pepperoniPizza);
+
+		// Meat Lovers Pizza
+		Pizza meatPizza = new Pizza(Arrays.asList(cheese, sauce, pepperoni, ham), "Meat Lovers Pizza");
+		menu.add(meatPizza);
+
+		// Vegetarian
+		Pizza vegetarianPizza = new Pizza(Arrays.asList(cheese, sauce, peppers, olives), "Vegetarian Pizza");
+		menu.add(vegetarianPizza);
+
+		for (Pizza pizza : menu) {
+			model.addRow(new Object[]{pizza.getName(), pizza.getCalorieCount(),pizza.listIngredients()});
+		}
 
 	}
+
+
 	
 	public void addPizzaButtonActionPerformed(ActionEvent evt)
 	{
@@ -189,7 +194,6 @@ public class MainPage extends JFrame{
 	public void createPizzaButtonActionPerformed(ActionEvent evt)
 	{
 		new AddPizzaPage().setVisible(true);
-		dispose();
 	}
 	
 	public void removePizzaButtonActionPerformed(ActionEvent evt)

@@ -15,6 +15,7 @@ public class Pizza
   //Pizza Attributes
   private int calorieCount;
   private double basePrice;
+  private String name;
 
   //Pizza Associations
   private List<Ingredient> ingredients;
@@ -24,10 +25,11 @@ public class Pizza
   // CONSTRUCTOR
   //------------------------
 
-  public Pizza(int aCalorieCount, double aBasePrice)
+  public Pizza(int aCalorieCount, double aBasePrice, String aName)
   {
     calorieCount = aCalorieCount;
     basePrice = aBasePrice;
+    name = aName;
     ingredients = new ArrayList<Ingredient>();
     orders = new ArrayList<Order>();
   }
@@ -40,6 +42,18 @@ public class Pizza
       basePrice += ingredient.getPrice();
     }
 
+    this.ingredients = ingredients;
+    orders = new ArrayList<Order>();
+  }
+
+  public Pizza(List<Ingredient> ingredients, String aName)
+  {
+
+    for (Ingredient ingredient : ingredients) {
+      calorieCount += ingredient.getCalorieCount();
+      basePrice += ingredient.getPrice();
+    }
+    name = aName;
     this.ingredients = ingredients;
     orders = new ArrayList<Order>();
   }
@@ -62,6 +76,11 @@ public class Pizza
     basePrice = aBasePrice;
     wasSet = true;
     return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
   }
 
   public int getCalorieCount()
@@ -439,4 +458,13 @@ public class Pizza
             "calorieCount" + ":" + getCalorieCount()+ "," +
             "basePrice" + ":" + getBasePrice()+ "]";
   }
+
+  public String listIngredients() {
+    String listString = "";
+    for (Ingredient ingredient : ingredients) {
+        listString += ingredient.getName() + ", ";
+    }
+    return listString;
+  }
+
 }
