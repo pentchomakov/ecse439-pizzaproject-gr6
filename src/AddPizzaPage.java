@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -16,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-public class AddPizzaPage extends JFrame{
+public class AddPizzaPage extends JFrame {
 	
 	private JPanel contentPane;
 	
@@ -30,7 +31,7 @@ public class AddPizzaPage extends JFrame{
 	private JList<String> ingredientList;
 
 	// Array for holding the possible topping choices
-	private List<Ingredient> toppings = new ArrayList<>();
+	private List<Ingredient> ingredients = new ArrayList<>();
 
 	private JTextField nameField;
 	private JTextField ingredientField;
@@ -39,6 +40,8 @@ public class AddPizzaPage extends JFrame{
 	private JLabel nameLabel;
 	private JLabel ingredientLabel;
 	private JLabel calorieLabel;
+	
+	private JComboBox ingredientsSelector;
 	
 	private JLabel errorMessage;
 	private String error;
@@ -51,8 +54,7 @@ public class AddPizzaPage extends JFrame{
 			e.printStackTrace();
 		}
 	}
-	public AddPizzaPage()
-	{
+	public AddPizzaPage() {
 		InitializeComponents();
 	}
 	
@@ -69,9 +71,9 @@ public class AddPizzaPage extends JFrame{
 		errorMessage.setForeground(Color.RED);
 
 		// Sets up default topping choices
-		initDefaultToppings();
+		initDefaultIngredients();
 
-		ingredientList = new JList<>( model );
+		ingredientList = new JList<>(model);
 
 		addPizzaButton = new JButton();
 		addPizzaButton.setText("Add Pizza");
@@ -90,27 +92,30 @@ public class AddPizzaPage extends JFrame{
 		ingredientLabel = new JLabel();
 		calorieLabel = new JLabel();
 		
+		ingredientsSelector = new JComboBox();
+		// TODO: get ingredients list from MainPage
+		for (Ingredient ingredient: ingredients) {
+			ingredientsSelector.addItem(ingredient.getName() + " - " + ingredient.getCalorieCount() + " Calories");
+		}
+		
 		nameLabel.setText("Name of the new Pizza");
 		ingredientLabel.setText("Ingredients of the pizza");
 		calorieLabel.setText("The amount of calories of the pizza");
-		
-		addPizzaButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) 
-			{
+		 
+		addPizzaButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addPizzaButtonActionPerformed(evt);
 			}
 		});
 		
-		addIngredientButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) 
-			{
+		addIngredientButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addIngredientButtonActionPerformed(evt);
 			}
 		});
 		
-		removeIngredientButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt) 
-			{
+		removeIngredientButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				removeIngredientButtonActionPerformed(evt);
 			}
 		});
@@ -140,6 +145,7 @@ public class AddPizzaPage extends JFrame{
 						.addComponent(addPizzaButton)
 						.addComponent(addIngredientButton)
 						.addComponent(removeIngredientButton))
+				.addComponent(ingredientsSelector)
 				);
 		
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {nameField, nameLabel});
@@ -166,6 +172,7 @@ public class AddPizzaPage extends JFrame{
 						.addComponent(addPizzaButton)
 						.addComponent(addIngredientButton)
 						.addComponent(removeIngredientButton))
+				.addComponent(ingredientsSelector)
 				);
 		
 		layout.linkSize(SwingConstants.VERTICAL, new java.awt.Component[] {nameField, addPizzaButton});
@@ -177,10 +184,8 @@ public class AddPizzaPage extends JFrame{
 		
 	}
 	
-	public void refresh() 
-	{
+	public void refresh() {
 		errorMessage.setText(error);
-		ingredientField.setText("");
 		pack();
 	}
 	
@@ -209,118 +214,117 @@ public class AddPizzaPage extends JFrame{
 	    return true;
 	}
 	
-	public boolean addPizzaFieldsFilledCorrectly(String pizzaName, String calorieAmount)
-	{
-		if(pizzaName == null|| pizzaName.length() == 0)
-		{
+	public boolean addPizzaFieldsFilledCorrectly(String pizzaName, String calorieAmount) {
+		if (pizzaName == null|| pizzaName.length() == 0) {
 			error = "You must enter a name for the pizza.";
 			return false;
-		}
-		else if(calorieAmount == null || calorieAmount.length() == 0)
-		{
+		} else if(calorieAmount == null || calorieAmount.length() == 0) {
 			error = "You must enter a calorie amount for the pizza.";
 			return false;
-		}
-		else if(isStringNumeric(calorieAmount) == false)
-		{
+		} else if(isStringNumeric(calorieAmount) == false) {
 			error = "The calorie amount must be a number.";
 			return false;
-		}
-		else if(model.isEmpty())
-		{
+		} else if(model.isEmpty()) {
 			error = "The pizza must have ingredients.";
 			return false;
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
 	
-	public boolean addIngredientFieldsFilledCorrectly(String ingredientName)
-	{
-		if(ingredientName == null || ingredientName.length() == 0)
-		{
+	public boolean addIngredientFieldsFilledCorrectly(String ingredientName) {
+		if(ingredientName == null || ingredientName.length() == 0) {
 			return false;
 		}
-		else
-		{
+		else {
 			return true;
 		}
 	}
 	
-	public void addPizzaButtonActionPerformed(ActionEvent evt)
-	{
+	public void addPizzaButtonActionPerformed(ActionEvent evt) {
 		String pizzaName = nameField.getText();
 		String calorieAmount = calorieField.getText();
 		
-		if(addPizzaFieldsFilledCorrectly(pizzaName,calorieAmount) == true)
-		{
-			new MainPage().setVisible(true);
+		if (addPizzaFieldsFilledCorrectly(pizzaName, calorieAmount) == true) {
+			// TODO: Deal with ingredients
+			List<Ingredient> ingredients = new ArrayList<>();
+			// TODO: Deal with calories
+			
+			Pizza pizza = new Pizza(Integer.parseInt(calorieAmount), 0.0, pizzaName);
+			for (Ingredient ingredient: ingredients) {
+				pizza.addIngredient(ingredient);
+			}
+			// TODO add pizza to order table
 			dispose();
-		}
-		else
-		{
+		} else {
 			refresh();
 		}
 	}
 	
-	public void addIngredientButtonActionPerformed(ActionEvent evt)
-	{
-		String ingredientName = ingredientField.getText();
-		if(addIngredientFieldsFilledCorrectly(ingredientName) == true)
-		{
+	public void addIngredientButtonActionPerformed(ActionEvent evt) {
+		
+		String ingredientName = ingredientsSelector.getSelectedItem().toString();
+		Ingredient ingredient = null;
+		for (Ingredient item : ingredients) {
+			if (item.getName().equals(ingredientName)) { 
+				ingredient = item;
+				break;
+			}
+		}
+		
+		boolean ingredientExists = false;
+		for (int i = 0; i < model.getSize(); i++) {
+			if (model.getElementAt(i).toString().equals(ingredientName)) {
+				ingredientExists = true;
+				break;
+			}
+		}
+		
+		if (ingredientExists) {
+			error = "You already added " + ingredientName + " to your pizza!";
+			refresh();
+		} else {
 			error = null;
 			model.addElement(ingredientName);
 			refresh();
 		}
-		else
-		{
-			error = "You must enter an ingredient name to add it to the list.";
-			refresh();
-		}
 	}
 	
-	public void removeIngredientButtonActionPerformed(ActionEvent evt)
-	{
-		if(ingredientList.getSelectedIndex() == -1)
-		{
+	public void removeIngredientButtonActionPerformed(ActionEvent evt) {
+		if (ingredientList.getSelectedIndex() == -1) {
 			error = "No ingredient has been selected to be removed.";
 			refresh();
-		}
-		else
-		{
+		} else {
 			error = null;
 			model.removeElementAt(ingredientList.getSelectedIndex() );
 			refresh();
 		}
 	}
 
-	public void initDefaultToppings() {
-
+	public void initDefaultIngredients() {
 		// Cheese
 		Ingredient cheese = new Ingredient("Cheese", 0.5, 25);
-		toppings.add(cheese);
+		ingredients.add(cheese);
 
 		// Pizza Sauce
 		Ingredient sauce = new Ingredient("Pizza Sauce", 0.5, 15);
-		toppings.add(sauce);
+		ingredients.add(sauce);
 
 		// Pepperoni
 		Ingredient pepperoni = new Ingredient("Pepperoni", 2.5, 55);
-		toppings.add(pepperoni);
+		ingredients.add(pepperoni);
 
 		// Ham
 		Ingredient ham = new Ingredient("Ham", 3.5, 155);
-		toppings.add(ham);
+		ingredients.add(ham);
 
 		// Peppers
 		Ingredient peppers = new Ingredient("Peppers", 2, 5);
-		toppings.add(peppers);
+		ingredients.add(peppers);
 
 		// Olives
 		Ingredient olives = new Ingredient("Olives", 3, 15);
-		toppings.add(olives);
+		ingredients.add(olives);
 
 	}
 }

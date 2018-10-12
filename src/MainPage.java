@@ -27,7 +27,6 @@ public class MainPage extends JFrame {
 	// Array for holding the current pizza menu
 	private List<Pizza> presetPizzaMenu = new ArrayList<>();
 	private List<Ingredient> ingredients = new ArrayList<>();
-	private List<Pizza> pizzaShoppingCart = new ArrayList<>();
 
 	private JLabel tableLabel;
 	private JLabel orderLabel;
@@ -217,7 +216,6 @@ public class MainPage extends JFrame {
 			
 			for (Pizza pizza : presetPizzaMenu) {
 				if (pizza.getName().equals(pizzaName)) {
-					pizzaShoppingCart.add(pizza);
 					addPizzaToShoppingCart(pizza);
 					break;
 				}
@@ -241,20 +239,32 @@ public class MainPage extends JFrame {
 		
 		// If equals -1, no rows are selected. If equals to 0, it is the header row)
 		if (rowNumber != -1 || rowNumber != 0) {
-			String pizzaName = orderTable.getModel().getValueAt(rowNumber, 0).toString();
-			// TODO -> requires that we display pizzas in the Table as objects or to add an ID field which we don't show
-			// Delete the pizza from the Shopping Cart
-			
 			// Delete the pizza from the Order Table
-			orderModel.removeRow(rowNumber);
-			orderModel.fireTableDataChanged();
-			
+			removePizzaFromShoppingCart(rowNumber);
 		}
 	}
 	
+	public void removePizzaFromShoppingCart(int row) {
+		orderModel.removeRow(row);
+		orderModel.fireTableDataChanged();
+	}
+	
 	public void updatePizzaButtonActionPerformed(ActionEvent evt) {
-		// Get selected pizza from the Order Table
+		
+		// Get selected pizza from the Order Table and make it a new object
 		int rowNumber = orderTable.getSelectedRow();
+		if (rowNumber != -1 || rowNumber != 0) {
+			
+			String name = orderTable.getValueAt(rowNumber, 0).toString();
+			double price = (double) orderTable.getValueAt(rowNumber, 1);
+			int caloriesCount = (int) orderTable.getValueAt(rowNumber, 2);
+			List<Ingredient> ingredients = (List) orderTable.getValueAt(rowNumber, 2);
+			
+			Pizza pizza = new Pizza(caloriesCount, price, name);
+			for (Ingredient ingredient : ingredients) {
+				pizza.setIngredients(ingredient);
+			}
+		}	
 		
 		// TODO
 		// Pop up a new window to modify the pizza
