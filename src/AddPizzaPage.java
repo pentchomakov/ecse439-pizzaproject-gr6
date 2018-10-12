@@ -59,6 +59,7 @@ public class AddPizzaPage extends JFrame {
 		InitializeComponents();
 	}
 	
+	
 	public void InitializeComponents() {
 		int frameWidth = 1000;
 		int frameHeight = 350;

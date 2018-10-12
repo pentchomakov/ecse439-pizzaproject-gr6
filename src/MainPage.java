@@ -269,10 +269,10 @@ public class MainPage extends JFrame {
 			}
 		}	
 		
+		// TODO Finish this
 		if (pizza != null) {
-			new UpdatePizzaPage(pizza).setVisible(true);
+			//new UpdatePizzaPage(pizza).setVisible(true);
 		}
-
 		
 		// TODO
 		// Update the Order Table
