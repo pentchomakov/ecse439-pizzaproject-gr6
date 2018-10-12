@@ -54,12 +54,12 @@ public class AddPizzaPage extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
 	public AddPizzaPage() {
 		InitializeComponents();
 	}
 	
-	public void InitializeComponents()
-	{
+	public void InitializeComponents() {
 		int frameWidth = 1000;
 		int frameHeight = 350;
 		
@@ -189,7 +189,7 @@ public class AddPizzaPage extends JFrame {
 		pack();
 	}
 	
-	public static boolean isStringNumeric( String str )
+	public static boolean isStringNumeric(String str)
 	{
 	    DecimalFormatSymbols currentLocaleSymbols = DecimalFormatSymbols.getInstance();
 	    char localeMinusSign = currentLocaleSymbols.getMinusSign();

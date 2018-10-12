@@ -230,6 +230,8 @@ public class MainPage extends JFrame {
 
 	public void createPizzaButtonActionPerformed(ActionEvent evt) {
 		new AddPizzaPage().setVisible(true);
+		
+		// TODO add pizza to Order Table
 	}
 	
 	public void removePizzaButtonActionPerformed(ActionEvent evt) {
@@ -253,6 +255,7 @@ public class MainPage extends JFrame {
 		
 		// Get selected pizza from the Order Table and make it a new object
 		int rowNumber = orderTable.getSelectedRow();
+		Pizza pizza = null;
 		if (rowNumber != -1 || rowNumber != 0) {
 			
 			String name = orderTable.getValueAt(rowNumber, 0).toString();
@@ -260,17 +263,16 @@ public class MainPage extends JFrame {
 			int caloriesCount = (int) orderTable.getValueAt(rowNumber, 2);
 			List<Ingredient> ingredients = (List) orderTable.getValueAt(rowNumber, 2);
 			
-			Pizza pizza = new Pizza(caloriesCount, price, name);
+			pizza = new Pizza(caloriesCount, price, name);
 			for (Ingredient ingredient : ingredients) {
 				pizza.setIngredients(ingredient);
 			}
 		}	
 		
-		// TODO
-		// Pop up a new window to modify the pizza
-		
-		// TODO
-		// Modify the selected pizza object
+		if (pizza != null) {
+			new UpdatePizzaPage(pizza).setVisible(true);
+		}
+
 		
 		// TODO
 		// Update the Order Table
